@@ -9,11 +9,10 @@
 
 (defn home-page []
   [:div [:h2 "Welcome to fireant"]
-   [:div [:a {:href "/about"} "go to about page"]]])
+   [:div [:a {:href "draw"} "Draw!"]]])
 
-(defn about-page []
-  [:div [:h2 "About fireant"]
-   [:div [:a {:href "/"} "go to the home page"]]])
+(defn draw []
+  [:canvas {:id :draw}])
 
 (defn current-page []
   [:div [(session/get :current-page)]])
@@ -24,8 +23,8 @@
 (secretary/defroute "/" []
   (session/put! :current-page #'home-page))
 
-(secretary/defroute "/about" []
-  (session/put! :current-page #'about-page))
+(secretary/defroute "/draw" []
+  (session/put! :current-page #'draw))
 
 ;; -------------------------
 ;; Initialize app

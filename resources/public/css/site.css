@@ -1,6 +1,5 @@
 .body-container {
   font-family: 'Helvetica Neue', Verdana, Helvetica, Arial, sans-serif;
-  max-width: 600px;
   margin: 0 auto;
   padding-top: 72px;
   -webkit-font-smoothing: antialiased;
@@ -31,4 +30,11 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+#draw {
+    border-style: solid;
+    width: 90%;
+    height: 10%;
+    margin-left: 5%;
 }
