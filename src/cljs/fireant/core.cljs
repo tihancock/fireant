@@ -16,7 +16,8 @@
   (reagent/create-class
    {:component-did-mount draw/setup-drawing!
 
-    :reagent-render (fn [_] [:canvas {:id :draw}])}))
+    :reagent-render (fn [_] [:div {:id :draw-container}
+                             [:canvas {:id :draw}]])}))
 
 (defn current-page []
   [:div [(session/get :current-page)]])
