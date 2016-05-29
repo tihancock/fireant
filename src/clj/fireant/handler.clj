@@ -1,9 +1,10 @@
 (ns fireant.handler
-  (:require [compojure.core :refer [GET defroutes]]
+  (:require [compojure.core :refer [GET POST defroutes]]
             [compojure.route :refer [not-found resources]]
             [hiccup.page :refer [include-js include-css html5]]
             [fireant.middleware :refer [wrap-middleware]]
-            [config.core :refer [env]]))
+            [config.core :refer [env]]
+            [ring.util.anti-forgery :refer [anti-forgery-field]]))
 
 (def mount-target
   [:div#app
@@ -29,8 +30,12 @@
 
 (defroutes routes
   (GET "/" [] loading-page)
-  (GET "/about" [] loading-page)
-  
+  (GET "/draw" [] loading-page)
+
+  (POST "/upload" {params :params}
+        (println "IMAGE INCOMING: " params)
+        {:status 200})
+
   (resources "/")
   (not-found "Not Found"))
 

@@ -2,7 +2,8 @@
   (:require-macros [cljs.core.async.macros :refer [go-loop]])
   (:require [goog.dom :as dom]
             [goog.events :as events]
-            [cljs.core.async :refer [put! chan <!]]))
+            [cljs.core.async :refer [put! chan <!]]
+            [cljs-http.client :as http]))
 
 (defn listen [out-chan el type]
   (events/listen el type (fn [e] (put! out-chan e))))
@@ -40,3 +41,7 @@
            (= type "mouseout") false
 
            :else mousedown))))))
+
+(defn upload-drawing! []
+  (let [image (.toDataURL (dom/getElement "draw"))]
+    (http/post "/upload" {:form-params {:image image}})))
