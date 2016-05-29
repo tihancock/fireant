@@ -17,23 +17,26 @@
         draw (dom/getElement "draw")
         context (.getContext draw "2d")]
     (setup-canvas draw)
-    (doseq [e ["mousedown" "mouseup" "mousemove"]]
+    (doseq [e ["mousedown" "mouseup" "mousemove" "mouseout"]]
       (listen mouse-chan draw e))
     (go-loop [mousedown false]
       (let [msg (<! mouse-chan)
             type (.-type msg)
-            start-mousedown (and (not mousedown) (= type "mousedown"))]
+            left-button (= 0 (.-button msg))
+            start-mousedown (and (not mousedown) (= type "mousedown") left-button)]
         (recur
          (cond
            start-mousedown
            (do (.beginPath context)
                true)
 
-           (and mousedown (= type "mousemove"))
+           (and (> mousedown 0) (= type "mousemove"))
            (do (.lineTo context (.-offsetX msg) (.-offsetY msg))
                (.stroke context)
                true)
 
-           (= type "mouseup") false
+           (and (= type "mouseup") left-button) false
 
-           :else false))))))
+           (= type "mouseout") false
+
+           :else mousedown))))))
