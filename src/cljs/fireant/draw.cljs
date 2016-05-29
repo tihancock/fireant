@@ -15,11 +15,11 @@
 
 (defn setup-drawing! []
   (let [mouse-chan (chan)
-        draw (dom/getElement "draw")
-        context (.getContext draw "2d")]
-    (setup-canvas draw)
+        canvas (dom/getElement "draw")
+        context (.getContext canvas "2d")]
+    (setup-canvas canvas)
     (doseq [e ["mousedown" "mouseup" "mousemove" "mouseout"]]
-      (listen mouse-chan draw e))
+      (listen mouse-chan canvas e))
     (go-loop [mousedown false]
       (let [msg (<! mouse-chan)
             type (.-type msg)
@@ -43,5 +43,7 @@
            :else mousedown))))))
 
 (defn upload-drawing! []
-  (let [image (.toDataURL (dom/getElement "draw"))]
-    (http/post "/upload" {:form-params {:image image}})))
+  (let [image (.toDataURL (dom/getElement "draw"))
+        canvas (dom/getElement "draw")]
+    (http/post "/upload" {:form-params {:image image}})
+    (.clearRect (.getContext canvas "2d") 0 0 (.-width canvas) (.-height canvas))))
