@@ -2,7 +2,8 @@
     (:require [reagent.core :as reagent :refer [atom]]
               [reagent.session :as session]
               [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]))
+              [accountant.core :as accountant]
+              [fireant.draw :as draw]))
 
 ;; -------------------------
 ;; Views
@@ -12,7 +13,10 @@
    [:div [:a {:href "draw"} "Draw!"]]])
 
 (defn draw []
-  [:canvas {:id :draw}])
+  (reagent/create-class
+   {:component-did-mount draw/setup-drawing!
+
+    :reagent-render (fn [_] [:canvas {:id :draw}])}))
 
 (defn current-page []
   [:div [(session/get :current-page)]])

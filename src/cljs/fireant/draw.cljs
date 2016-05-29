@@ -12,26 +12,28 @@
   (set! (.-width c) (.-offsetWidth c))
   (set! (.-height c) (.-offsetHeight c)))
 
-(let [mouse-chan (chan)
-      draw (dom/getElement "draw")
-      context (.getContext draw  "2d")]
-  (setup-canvas draw)
-  (doseq [e ["mousedown" "mouseup" "mousemove"]]
-    (listen mouse-chan draw e))
-  (go-loop [mousedown false]
-    (let [msg (<! mouse-chan)
-          type (.-type msg)
-          start-mousedown (and (not mousedown) (= type "mousedown"))]
-      (recur
-       (cond
-         start-mousedown
-         (do (.beginPath context)
-             true)
+(defn setup-drawing! []
+  (let [mouse-chan (chan)
+        draw (dom/getElement "draw")
+        context (.getContext draw "2d")]
+    (setup-canvas draw)
+    (doseq [e ["mousedown" "mouseup" "mousemove"]]
+      (listen mouse-chan draw e))
+    (go-loop [mousedown false]
+      (let [msg (<! mouse-chan)
+            type (.-type msg)
+            start-mousedown (and (not mousedown) (= type "mousedown"))]
+        (recur
+         (cond
+           start-mousedown
+           (do (.beginPath context)
+               true)
 
-         (and mousedown (= type "mousemove"))
-         (do (.lineTo context (.-offsetX msg) (.-offsetY msg))
-             (.stroke context)
-             true)
+           (and mousedown (= type "mousemove"))
+           (do (.lineTo context (.-offsetX msg) (.-offsetY msg))
+               (.stroke context)
+               true)
 
-         (= type "mouseup")
-         false)))))
+           (= type "mouseup") false
+
+           :else false))))))
