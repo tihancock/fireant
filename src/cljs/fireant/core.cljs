@@ -20,7 +20,8 @@
                       [:div
                        [:input {:type :button
                                 :value "Submit"
-                                :on-click draw/upload-drawing!}]
+                                :on-click #(do (draw/upload-drawing!)
+                                               (session/put! :current-page #'home-page))}]
                        [:div {:id :draw-container}
                         [:canvas {:id :draw}]]])}))
 
